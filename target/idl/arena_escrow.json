@@ -1,0 +1,18 @@
+{
+  "address": "11111111111111111111111111111111",
+  "metadata": {
+    "name": "arena_escrow",
+    "version": "0.1.0",
+    "spec": "0.1.0"
+  },
+  "instructions": [
+    { "name": "create_duel" },
+    { "name": "join_duel" },
+    { "name": "lock_duel" },
+    { "name": "credit_fees" },
+    { "name": "mark_settling" },
+    { "name": "settle_payout" },
+    { "name": "void_refund" }
+  ],
+  "accounts": [{ "name": "DuelVault" }]
+}

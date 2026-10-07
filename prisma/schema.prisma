@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Coin {
+  id               String   @id @default(cuid())
+  mint             String   @unique
+  symbol           String
+  name             String
+  treasuryWallet   String
+  treasuryBalance  BigInt   @default(0)
+  stockTicker      String
+  stockPinnedPrice Float
+  earningsAt       DateTime
+  sector           String?
+  creatorWallet    String
+  pumpCreator      String?
+  pumpVerifiedAt   DateTime?
+  createdAt        DateTime @default(now())
+
+  duelsAsA     Duel[]     @relation("SideA")
+  duelsAsB     Duel[]     @relation("SideB")
+  wins         Duel[]     @relation("Winner")
+  feeEvents    FeeEvent[]
+}
+
+model Duel {
+  id           String     @id @default(cuid())
+  sideACoinId  String
+  sideBCoinId  String?
+  status       String     @default("open")
+  potLamports  BigInt     @default(0)
+  vaultPubkey  String?
+  createTxSig  String?
+  lockTxSig    String?
+  settleTxSig  String?
+  reportAt     DateTime?
+  settleAt     DateTime?
+  priceA0      Float?
+  priceB0      Float?
+  priceA1      Float?
+  priceB1      Float?
+  moveAPct     Float?
+  moveBPct     Float?
+  winnerCoinId String?
+  resolvedAt   DateTime?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  sideA        Coin       @relation("SideA", fields: [sideACoinId], references: [id])
+  sideB        Coin?      @relation("SideB", fields: [sideBCoinId], references: [id])
+  winner       Coin?      @relation("Winner", fields: [winnerCoinId], references: [id])
+  feeEvents    FeeEvent[]
+  logs         SettlementLog[]
+}
+
+model FeeEvent {
+  id          String   @id @default(cuid())
+  duelId      String
+  coinId      String
+  lamports    BigInt
+  source      String   @default("stub")
+  txSignature String?  @unique
+  createdAt   DateTime @default(now())
+
+  duel      Duel     @relation(fields: [duelId], references: [id])
+  coin      Coin     @relation(fields: [coinId], references: [id])
+}
+
+model SettlementLog {
+  id          String   @id @default(cuid())
+  duelId      String
+  payloadJson String
+  createdAt   DateTime @default(now())
+
+  duel        Duel     @relation(fields: [duelId], references: [id])
+}
