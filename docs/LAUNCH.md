@@ -28,7 +28,7 @@ Target: **money launch** (escrow pot of record). UI fight-night + program scaffo
 | Real Pump fee API | Set `PUMP_API` or run stub only in staging |
 | Production Privy | Dashboard domains + secrets |
 | Hosted Postgres + Finnhub | Env on Vercel |
-| Cron + fee worker | Vercel cron settle; host `fees:index` on a schedule |
+| Cron + fee worker | Vercel crons: `/api/cron/settle` + `/api/cron/fees` (see [VERCEL.md](./VERCEL.md)); CLI `fees:index` still works |
 | Counsel on ToS/risk | Replace templates |
 | Install `@sentry/nextjs` | Optional upgrade from stub |
 
@@ -39,13 +39,17 @@ Target: **money launch** (escrow pot of record). UI fight-night + program scaffo
 | `NEXT_PUBLIC_SOLANA_RPC` | RPC used to fetch Pump bonding curve |
 | `ALLOW_UNVERIFIED_MINTS` | Local/seed only: demo mints (`MintA…`) may skip RPC; real addresses always get Pump + creator checks. Ignored when `NODE_ENV=production` or `VERCEL=1` |
 
-## Smoke (devnet)
+## Staging on Vercel
+
+See [VERCEL.md](./VERCEL.md) for install/build, env, Privy domains, and settle/fee crons.
+
+## Smoke (devnet / staging)
 
 1. Privy login → paste a mint you created on Pump → verify succeeds → pin → duel has `vaultPubkey`
 2. Paste someone else’s mint → 400 `not_creator`
 3. Challenge + lock → `awaiting_print`
-4. `FEE_INDEXER_STUB=true npm run fees:index` → pot grows
-5. Settle cron with Finnhub/overrides (staging only) → KO feed + `settleTxSig`
+4. `FEE_INDEXER_STUB=true npm run fees:index` (or `/api/cron/fees`) → pot grows
+5. Settle cron with Finnhub/overrides (local only; ignored on Vercel) → KO feed + `settleTxSig`
 
 ## Definition of money launch
 

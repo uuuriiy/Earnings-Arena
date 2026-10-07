@@ -1,0 +1,86 @@
+# Vercel staging deploy
+
+Target: **staging** on Vercel with ledger pot, Privy auth, Pump mint verify, and working settle/fee crons. Escrow/mainnet money launch is separate ([LAUNCH.md](./LAUNCH.md)).
+
+## Project settings
+
+| Setting | Value |
+|---------|--------|
+| Framework | Next.js |
+| Install Command | `npm ci --legacy-peer-deps` |
+| Build Command | `npx prisma migrate deploy && next build` |
+| Output | default Next.js |
+
+Do **not** put `prisma migrate deploy` into local `package.json` `build` — CI uses a dummy `DATABASE_URL`.
+
+Sub-daily crons in [`vercel.json`](../vercel.json) need a Vercel plan that supports them (Hobby is limited).
+
+## Environment variables
+
+### Required
+
+| Var | Notes |
+|-----|--------|
+| `DATABASE_URL` | Postgres pooler URL (`?pgbouncer=true` if Supabase `:6543`) |
+| `DIRECT_URL` | Session/direct URL for migrations |
+| `NEXT_PUBLIC_PRIVY_APP_ID` | Privy app |
+| `PRIVY_APP_SECRET` | Privy server secret |
+| `PRIVY_JWT_VERIFICATION_KEY` | If required by your Privy setup |
+| `CRON_SECRET` | Required on Vercel; Vercel Cron sends `Authorization: Bearer <CRON_SECRET>` |
+| `FINNHUB_API_KEY` | Quotes + earnings |
+| `NEXT_PUBLIC_SOLANA_RPC` | **Mainnet** RPC for Pump bonding-curve verify |
+
+### Staging-safe
+
+| Var | Staging value |
+|-----|----------------|
+| `NEXT_PUBLIC_ARENA_PROGRAM_ID` | empty → ledger pot |
+| `KEEPER_SECRET_KEY` | empty |
+| `FEE_INDEXER_STUB` | `true` for demo pot growth; turn off when `PUMP_API` is real |
+| `PUMP_API` | empty until fee feed exists |
+| `ALLOW_UNVERIFIED_MINTS` | ignored when `VERCEL=1` |
+| `ALLOW_SETTLE_OVERRIDES` | ignored when `VERCEL=1` |
+| `NEXT_PUBLIC_SENTRY_DSN` | optional |
+| `NEXT_PUBLIC_APP_NAME` | optional |
+
+## Privy
+
+In the Privy dashboard, allowlist:
+
+- `https://<project>.vercel.app`
+- Preview URLs if you use them
+- Custom staging domain when ready
+
+Solana login must be enabled (same as local).
+
+## Crons
+
+Configured in [`vercel.json`](../vercel.json):
+
+| Path | Schedule | Role |
+|------|----------|------|
+| `/api/cron/settle` | `*/5 * * * *` | Print → settle → resolve |
+| `/api/cron/fees` | `*/10 * * * *` | Credit fees into active pots |
+
+Both require `Authorization: Bearer $CRON_SECRET`. Manual check:
+
+```bash
+curl -sS -H "Authorization: Bearer $CRON_SECRET" "https://<host>/api/cron/settle"
+curl -sS -H "Authorization: Bearer $CRON_SECRET" "https://<host>/api/cron/fees"
+```
+
+Local CLI still works: `npm run fees:index`.
+
+## Smoke checklist
+
+1. Deploy succeeds; migrations apply
+2. Connect wallet (Privy)
+3. Paste a Pump mint **you created** → verify OK
+4. Pin sub-$5 ticker with earnings in 14 days → open duel
+5. Second wallet challenges with its own pinned coin → side A locks
+6. With `FEE_INDEXER_STUB=true`, wait for fees cron (or hit `/api/cron/fees`) → pot > 0
+7. After earnings / settle window, settle cron moves bout toward KO feed
+
+## After staging is green
+
+See [LAUNCH.md](./LAUNCH.md) for escrow deploy, keeper key, real `PUMP_API`, production Privy, and legal.

@@ -46,6 +46,7 @@ npm run escrow:deploy-devnet
 
 ```bash
 npm run fees:index
+# or secured cron: GET /api/cron/fees (see docs/VERCEL.md)
 ```
 
-Polls active duels and credits stub/Pump fee events via keeper `credit_fees` (see `scripts/fee-indexer.ts`).
+Polls active duels and credits stub/Pump fee events via keeper `credit_fees` (see `src/shared/lib/fees/indexer.ts`).

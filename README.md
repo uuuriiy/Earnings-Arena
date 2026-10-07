@@ -6,6 +6,7 @@ Memecoins duel on penny-stock earnings. Bigger absolute move takes the pot.
 
 - [Product](docs/PRODUCT.md)
 - [Launch readiness](docs/LAUNCH.md)
+- [Vercel staging deploy](docs/VERCEL.md)
 - [Escrow program](docs/ESCROW.md)
 
 ## Stack

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/shared/lib/db";
+import { authorizeCron, isProductionLike } from "@/shared/lib/cron/auth";
 import { markEarningsPrinted, resolveDuel } from "@/shared/lib/fees/pot";
 import { snapshotPrice } from "@/features/market/server/finnhub";
 import { captureException } from "@/shared/lib/monitoring/sentry";
@@ -7,49 +8,17 @@ import { serialize } from "@/shared/lib/serialize";
 import { settleCronSchema } from "@/features/duel/validation/duels";
 import { zodIssues } from "@/shared/lib/validation/parse";
 
-function isProductionLike() {
-  return process.env.NODE_ENV === "production" || process.env.VERCEL === "1";
-}
-
 function overridesAllowed() {
   return process.env.ALLOW_SETTLE_OVERRIDES === "true" && !isProductionLike();
 }
 
-function authorized(req: Request): { ok: true } | { ok: false; status: number; error: string } {
-  const secret = process.env.CRON_SECRET;
-  if (isProductionLike() && !secret) {
-    return { ok: false, status: 500, error: "CRON_SECRET is required in production" };
-  }
-  if (!secret) {
-    return { ok: false, status: 401, error: "CRON_SECRET is not configured" };
-  }
-  if (req.headers.get("authorization") !== `Bearer ${secret}`) {
-    return { ok: false, status: 401, error: "Unauthorized" };
-  }
-  return { ok: true };
-}
+type SettleBody = {
+  duelId?: string;
+  forceReportAt?: string;
+  priceOverrides?: Record<string, number>;
+};
 
-export async function POST(req: Request) {
-  const auth = authorized(req);
-  if (!auth.ok) {
-    return NextResponse.json({ error: auth.error }, { status: auth.status });
-  }
-
-  let body: {
-    duelId?: string;
-    forceReportAt?: string;
-    priceOverrides?: Record<string, number>;
-  };
-
-  try {
-    const raw = await req.json().catch(() => ({}));
-    body = settleCronSchema.parse(raw);
-  } catch (err) {
-    const issues = zodIssues(err);
-    if (issues) return NextResponse.json(issues, { status: 400 });
-    return NextResponse.json({ error: "Invalid body" }, { status: 400 });
-  }
-
+async function runSettle(body: SettleBody) {
   const allowOverrides = overridesAllowed();
   const forceReportAt = allowOverrides ? body.forceReportAt : undefined;
   const priceOverrides = allowOverrides ? body.priceOverrides : undefined;
@@ -134,13 +103,36 @@ export async function POST(req: Request) {
     }
   }
 
-  return NextResponse.json({ ok: true, results: serialize(results) });
+  return { ok: true as const, results: serialize(results) };
 }
 
-export async function GET() {
-  return NextResponse.json({
-    ok: true,
-    hint: "Use POST with Authorization: Bearer $CRON_SECRET",
-  });
+/** Vercel Cron: GET with Authorization: Bearer $CRON_SECRET */
+export async function GET(req: Request) {
+  const auth = authorizeCron(req);
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+  const payload = await runSettle({});
+  return NextResponse.json(payload);
 }
 
+/** Manual/local: POST may include duelId / staging overrides. */
+export async function POST(req: Request) {
+  const auth = authorizeCron(req);
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
+  let body: SettleBody;
+  try {
+    const raw = await req.json().catch(() => ({}));
+    body = settleCronSchema.parse(raw);
+  } catch (err) {
+    const issues = zodIssues(err);
+    if (issues) return NextResponse.json(issues, { status: 400 });
+    return NextResponse.json({ error: "Invalid body" }, { status: 400 });
+  }
+
+  const payload = await runSettle(body);
+  return NextResponse.json(payload);
+}
