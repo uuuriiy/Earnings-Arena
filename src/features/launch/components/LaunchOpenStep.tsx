@@ -26,10 +26,16 @@ export function LaunchOpenStep({
           <dd>{(watched.stockTicker ?? "").toUpperCase()}</dd>
         </div>
       </dl>
-      <Button type="submit" variant="arena" size="xl" disabled={launchPending}>
+      <Button
+        type="submit"
+        variant="arena"
+        size="xl"
+        className="w-full sm:w-auto"
+        disabled={launchPending}
+      >
         {launchPending ? "Opening…" : "Pin stock & open duel"}
       </Button>
-      <Button type="button" variant="ghost" onClick={() => setStep(2)}>
+      <Button type="button" variant="ghost" className="w-full sm:w-auto" onClick={() => setStep(2)}>
         Back
       </Button>
     </form>

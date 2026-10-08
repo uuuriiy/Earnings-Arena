@@ -32,6 +32,7 @@ export function ChallengePanel({
                 type="button"
                 variant="arena"
                 size="xl"
+                className="w-full sm:w-auto"
                 onClick={() => void panel.connect()}
                 disabled={!panel.ready}
               >
@@ -44,6 +45,7 @@ export function ChallengePanel({
                 type="button"
                 variant="arena"
                 size="xl"
+                className="w-full sm:w-auto"
                 onClick={panel.enableSuggestions}
                 disabled={panel.busy}
               >
@@ -89,6 +91,7 @@ export function ChallengePanel({
           type="button"
           variant="arena"
           size="xl"
+          className="w-full sm:w-auto"
           onClick={panel.accept}
           disabled={panel.busy}
         >

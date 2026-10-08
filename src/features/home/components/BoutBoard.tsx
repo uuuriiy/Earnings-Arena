@@ -31,7 +31,7 @@ export function BoutBoard({
   const onlyFeatured = total === 0 && Boolean(featuredId);
 
   return (
-    <section className="pb-16">
+    <section className="pb-8 lg:pb-16">
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h2 className="font-display text-3xl tracking-[0.06em]">BOUT BOARD</h2>
@@ -91,11 +91,11 @@ export function BoutBoard({
           <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
             0 open · 0 locked · 0 settling
           </p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <Button asChild variant="arena" size="xl">
+          <div className="mt-6 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <Button asChild variant="arena" size="xl" className="w-full sm:w-auto">
               <Link href="/launch">Enter a coin</Link>
             </Button>
-            <Button asChild variant="arenaGhost" size="xl">
+            <Button asChild variant="arenaGhost" size="xl" className="w-full sm:w-auto">
               <Link href="/feed">Watch KOs</Link>
             </Button>
           </div>

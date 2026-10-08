@@ -20,8 +20,8 @@ export function DuelFightCard({ model }: { model: DuelPageModel }) {
 
   return (
     <>
-      <section className="mt-5 border border-border bg-[var(--bg-1)]/70 p-5 md:p-8">
-        <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-[1fr_auto_1fr]">
+      <section className="mt-5 border border-border bg-[var(--bg-1)]/70 p-4 sm:p-5 md:p-8">
+        <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-[1fr_auto_1fr] md:gap-8">
           <Side
             side={sideA}
             move={moveAPct}

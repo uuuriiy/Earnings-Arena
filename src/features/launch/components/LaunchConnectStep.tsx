@@ -29,7 +29,7 @@ export function LaunchConnectStep({
           type="button"
           variant="arena"
           size="xl"
-          className="mt-6"
+          className="mt-6 w-full sm:w-auto"
           disabled={!ready || connecting}
           onClick={() => void connect()}
         >

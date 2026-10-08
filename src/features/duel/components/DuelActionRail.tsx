@@ -12,7 +12,7 @@ export function DuelActionRail({
   hasSideB: boolean;
 }) {
   return (
-    <section className="mt-6 border border-border bg-[var(--bg-2)]/40 p-5">
+    <section className="mt-6 border border-border bg-[var(--bg-2)]/40 p-4 sm:p-5">
       <h2 className="font-display text-2xl tracking-[0.06em]">ACTIONS</h2>
       <p className="mt-1 font-mono text-xs text-muted-foreground">
         Challenge with your coin or lock the bout when you are side A.

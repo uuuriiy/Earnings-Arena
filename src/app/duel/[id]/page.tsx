@@ -21,7 +21,7 @@ export default async function DuelPage({
   const { duel } = model;
 
   return (
-    <div className="pb-16">
+    <div className="pb-8 lg:pb-16">
       <DuelStatusBar
         status={duel.status}
         escrow={model.escrow}

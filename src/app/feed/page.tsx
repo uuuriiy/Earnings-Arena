@@ -12,7 +12,7 @@ export default async function FeedPage() {
 
   return (
     <>
-      <h1 className="mb-2 font-display text-5xl tracking-wider">KO FEED</h1>
+      <h1 className="mb-2 font-display text-4xl tracking-wider sm:text-5xl">KO FEED</h1>
       <p className="mb-8 max-w-md text-muted-foreground">
         Settled bouts — winner, absolute moves, pot paid.
       </p>
@@ -25,7 +25,7 @@ export default async function FeedPage() {
           <p className="mt-2 font-mono text-sm text-muted-foreground">
             Run the arena clock — settlements land here.
           </p>
-          <Button asChild variant="arenaGhost" size="xl" className="mt-6">
+          <Button asChild variant="arenaGhost" size="xl" className="mt-6 w-full sm:w-auto">
             <Link href="/">Back to arena</Link>
           </Button>
         </div>

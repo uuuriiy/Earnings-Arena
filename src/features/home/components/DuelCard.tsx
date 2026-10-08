@@ -20,10 +20,18 @@ export function DuelCard({ duel }: { duel: DuelCardData }) {
   return (
     <Link
       href={`/duel/${duel.id}`}
-      className="grid grid-cols-[auto_1fr_auto_auto] items-center gap-4 border border-border bg-[var(--bg-2)]/40 px-4 py-3 transition-colors hover:border-primary/40"
+      className="grid grid-cols-1 gap-3 border border-border bg-[var(--bg-2)]/40 px-4 py-3 transition-colors hover:border-primary/40 sm:grid-cols-[auto_1fr_auto_auto] sm:items-center sm:gap-4"
     >
-      <Badge className="min-w-[7.5rem] justify-center">{duel.status}</Badge>
-      <div className="font-display text-xl tracking-[0.05em]">
+      <div className="flex items-center justify-between gap-3 sm:contents">
+        <Badge className="min-w-[7.5rem] justify-center">{duel.status}</Badge>
+        <div className="font-display text-xl tracking-[0.05em] sm:hidden">
+          ${duel.sideA.symbol}
+          <span className="mx-2 text-danger">VS</span>
+          {duel.sideB ? `$${duel.sideB.symbol}` : "OPEN"}
+        </div>
+      </div>
+
+      <div className="hidden font-display text-xl tracking-[0.05em] sm:block">
         ${duel.sideA.symbol}
         <span className="mx-2 text-danger">VS</span>
         {duel.sideB ? `$${duel.sideB.symbol}` : "OPEN"}
@@ -32,16 +40,24 @@ export function DuelCard({ duel }: { duel: DuelCardData }) {
           {duel.sideB ? ` · ${duel.sideB.stockTicker}` : " · waiting"}
         </div>
       </div>
-      <div className="text-right font-mono text-sm">
-        {potSol.toFixed(4)}
-        <span className="text-muted-foreground"> SOL</span>
+
+      <div className="font-mono text-[10px] text-muted-foreground sm:hidden">
+        {duel.sideA.stockTicker}
+        {duel.sideB ? ` · ${duel.sideB.stockTicker}` : " · waiting"}
       </div>
-      <div className="min-w-[5.5rem] text-right">
-        {timerTarget ? (
-          <Countdown target={timerTarget} />
-        ) : (
-          <span className="font-mono text-xs text-muted-foreground">—</span>
-        )}
+
+      <div className="flex items-center justify-between gap-3 sm:contents">
+        <div className="font-mono text-sm sm:text-right">
+          {potSol.toFixed(4)}
+          <span className="text-muted-foreground"> SOL</span>
+        </div>
+        <div className="min-w-[5.5rem] text-right">
+          {timerTarget ? (
+            <Countdown target={timerTarget} />
+          ) : (
+            <span className="font-mono text-xs text-muted-foreground">—</span>
+          )}
+        </div>
       </div>
     </Link>
   );

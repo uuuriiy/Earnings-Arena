@@ -16,7 +16,7 @@ export default function LaunchPage() {
     <div className="grid gap-10 lg:grid-cols-[minmax(0,32rem)_1fr] lg:items-start">
       <div>
         <div className="flex flex-wrap items-end justify-between gap-3">
-          <h1 className="font-display text-5xl tracking-[0.05em]">PIN &amp; FIGHT</h1>
+          <h1 className="font-display text-4xl tracking-[0.05em] sm:text-5xl">PIN &amp; FIGHT</h1>
           <span className="font-mono text-xs text-muted-foreground">{w.progress}</span>
         </div>
         <p className="mt-2 max-w-md text-muted-foreground">

@@ -22,7 +22,7 @@ export function FeaturedBout({
   return (
     <Link
       href={`/duel/${duel.id}`}
-      className="block border border-border bg-[var(--bg-1)]/80 p-6 backdrop-blur-sm transition-colors hover:border-primary/50"
+      className="block border border-border bg-[var(--bg-1)]/80 p-4 backdrop-blur-sm transition-colors hover:border-primary/50 sm:p-6"
     >
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
@@ -34,16 +34,18 @@ export function FeaturedBout({
         </div>
       </div>
 
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+      {/* Mobile: stacked. md+: side-by-side fight row */}
+      <div className="grid grid-cols-1 items-center gap-5 md:grid-cols-[1fr_auto_1fr] md:gap-4">
         <div>
-          <div className="font-display text-[clamp(2rem,6vw,3.5rem)] tracking-[0.04em]">
+          <div className="font-display text-[clamp(2rem,8vw,3.5rem)] tracking-[0.04em]">
             ${duel.sideA.symbol}
           </div>
           <div className="mt-2">
             <QuoteTicker ticker={duel.sideA.stockTicker} />
           </div>
         </div>
-        <div className="text-center">
+
+        <div className="flex flex-col items-center text-center">
           <div className="font-display text-3xl text-danger">VS</div>
           {timerTarget && (
             <div className="mt-3">
@@ -54,17 +56,16 @@ export function FeaturedBout({
             </div>
           )}
         </div>
-        <div className="text-right">
-          <div className="font-display text-[clamp(2rem,6vw,3.5rem)] tracking-[0.04em]">
+
+        <div className="md:text-right">
+          <div className="font-display text-[clamp(2rem,8vw,3.5rem)] tracking-[0.04em]">
             {duel.sideB ? `$${duel.sideB.symbol}` : "OPEN"}
           </div>
-          <div className="mt-2 flex justify-end">
+          <div className="mt-2 md:flex md:justify-end">
             {duel.sideB ? (
               <QuoteTicker ticker={duel.sideB.stockTicker} />
             ) : (
-              <span className="font-mono text-xs text-muted-foreground">
-                awaiting rival
-              </span>
+              <span className="font-mono text-xs text-muted-foreground">awaiting rival</span>
             )}
           </div>
         </div>
