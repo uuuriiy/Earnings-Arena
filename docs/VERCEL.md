@@ -7,8 +7,8 @@ Target: **staging** on Vercel with ledger pot, Privy auth, Pump mint verify, and
 | Setting | Value |
 |---------|--------|
 | Framework | Next.js |
-| Install Command | `npm ci --legacy-peer-deps` |
-| Build Command | `npx prisma migrate deploy && next build` |
+| Install Command | `npm ci --legacy-peer-deps` (also set in `vercel.json` + `.npmrc`) |
+| Build Command | `npx prisma migrate deploy && next build` (also set in `vercel.json`) |
 | Output | default Next.js |
 
 Do **not** put `prisma migrate deploy` into local `package.json` `build` — CI uses a dummy `DATABASE_URL`.

@@ -1,4 +1,6 @@
 {
+  "installCommand": "npm ci --legacy-peer-deps",
+  "buildCommand": "npx prisma migrate deploy && next build",
   "crons": [
     {
       "path": "/api/cron/settle",
