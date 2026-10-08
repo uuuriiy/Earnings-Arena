@@ -25,10 +25,10 @@ Target: **money launch** (escrow pot of record). UI fight-night + program scaffo
 | Deploy escrow to devnet/mainnet | `anchor build && anchor deploy`; set `NEXT_PUBLIC_ARENA_PROGRAM_ID` |
 | Keeper key | Funded keypair → `KEEPER_SECRET_KEY` |
 | Full Anchor CPI client | Replace discriminator stubs with IDL-generated client after first deploy |
-| Real Pump fee API | Set `PUMP_API` or run stub only in staging |
+| Real Pump fees | Default: on-chain RPC indexer ([FEES.md](./FEES.md)); optional `PUMP_API`; stub only for demos |
 | Production Privy | Dashboard domains + secrets |
 | Hosted Postgres + Finnhub | Env on Vercel |
-| Cron + fee worker | Vercel crons: `/api/cron/settle` + `/api/cron/fees` (see [VERCEL.md](./VERCEL.md)); CLI `fees:index` still works |
+| Cron + fee worker | Vercel daily + GitHub Action every 15m ([VERCEL.md](./VERCEL.md), [FEES.md](./FEES.md)) |
 | Counsel on ToS/risk | Replace templates |
 | Install `@sentry/nextjs` | Optional upgrade from stub |
 

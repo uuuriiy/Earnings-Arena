@@ -30,7 +30,8 @@ DB-backed pages (`/`, `/feed`, `/duel/[id]`, `/coin/[mint]`) use `force-dynamic`
 | `PRIVY_JWT_VERIFICATION_KEY` | If required by your Privy setup |
 | `CRON_SECRET` | Required on Vercel; Vercel Cron sends `Authorization: Bearer <CRON_SECRET>` |
 | `FINNHUB_API_KEY` | Quotes + earnings |
-| `NEXT_PUBLIC_SOLANA_RPC` | **Mainnet** RPC for Pump bonding-curve verify |
+| `SOLANA_RPC` | **Secret** — Alchemy/mainnet RPC for server (mint verify + fee indexer) |
+| `NEXT_PUBLIC_SOLANA_RPC` | **Config** — public mainnet RPC for Privy/browser (no Alchemy key) |
 
 ### Staging-safe
 
@@ -38,8 +39,8 @@ DB-backed pages (`/`, `/feed`, `/duel/[id]`, `/coin/[mint]`) use `force-dynamic`
 |-----|----------------|
 | `NEXT_PUBLIC_ARENA_PROGRAM_ID` | empty → ledger pot |
 | `KEEPER_SECRET_KEY` | empty |
-| `FEE_INDEXER_STUB` | `true` for demo pot growth; turn off when `PUMP_API` is real |
-| `PUMP_API` | empty until fee feed exists |
+| `FEE_INDEXER_STUB` | `true` for demo pot growth; **off in prod** (use RPC / `PUMP_API`) |
+| `PUMP_API` | optional HTTP fee feed; if empty, indexer uses Solana RPC |
 | `ALLOW_UNVERIFIED_MINTS` | ignored when `VERCEL=1` |
 | `ALLOW_SETTLE_OVERRIDES` | ignored when `VERCEL=1` |
 | `NEXT_PUBLIC_SENTRY_DSN` | optional |
@@ -72,6 +73,8 @@ curl -sS -H "Authorization: Bearer $CRON_SECRET" "https://<host>/api/cron/fees"
 ```
 
 Local CLI still works: `npm run fees:index`.
+
+For live pots on Hobby, add GitHub repo secrets `ARENA_URL` + `CRON_SECRET` so [arena-crons.yml](../.github/workflows/arena-crons.yml) hits fees/settle every 15 minutes. Full fee path: [FEES.md](./FEES.md).
 
 ## Smoke checklist
 

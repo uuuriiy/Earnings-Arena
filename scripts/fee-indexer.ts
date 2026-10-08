@@ -2,8 +2,10 @@
  * Fee indexer CLI — credits duel pots for active arenas.
  * Prefer Vercel cron GET /api/cron/fees in staging/production.
  *
- * Env: DATABASE_URL, PUMP_API optional, FEE_INDEXER_STUB optional
+ * Env: DATABASE_URL, SOLANA_RPC (or NEXT_PUBLIC_SOLANA_RPC), PUMP_API optional, FEE_INDEXER_STUB optional
+ * See docs/FEES.md for production path (on-chain RPC when stub is off).
  */
+import "dotenv/config";
 import { indexActiveDuelFees } from "../src/shared/lib/fees/indexer";
 import { prisma } from "../src/shared/lib/db";
 

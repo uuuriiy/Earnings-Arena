@@ -15,8 +15,13 @@ export function getProgramId() {
   return new PublicKey(process.env.NEXT_PUBLIC_ARENA_PROGRAM_ID || DEFAULT_PROGRAM_ID);
 }
 
+/** Server RPC: prefer private `SOLANA_RPC` (Alchemy etc.), then public fallback. */
 export function getRpc() {
-  return process.env.NEXT_PUBLIC_SOLANA_RPC || "https://api.devnet.solana.com";
+  return (
+    process.env.SOLANA_RPC ||
+    process.env.NEXT_PUBLIC_SOLANA_RPC ||
+    "https://api.devnet.solana.com"
+  );
 }
 
 export function escrowEnabled() {
