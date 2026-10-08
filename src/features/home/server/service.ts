@@ -1,4 +1,3 @@
-import { unstable_cache } from "next/cache";
 import { prisma } from "@/shared/lib/db";
 import { serialize } from "@/shared/lib/serialize";
 import type { DuelCardData } from "@/features/home/components/DuelCard";
@@ -8,7 +7,8 @@ export type HomeDuel = DuelCardData & {
   vaultPubkey?: string | null;
 };
 
-async function fetchOpenDuels(): Promise<HomeDuel[]> {
+/** Live board — no Data Cache so deleted duels cannot ghost after manual DB cleanup. */
+export async function listOpenDuels(): Promise<HomeDuel[]> {
   const rows = await prisma.duel.findMany({
     where: { status: { notIn: ["resolved", "voided"] } },
     include: { sideA: true, sideB: true },
@@ -17,9 +17,3 @@ async function fetchOpenDuels(): Promise<HomeDuel[]> {
   });
   return serialize<HomeDuel[]>(rows);
 }
-
-/** Cached board for soft navigation / ISR. */
-export const listOpenDuels = unstable_cache(fetchOpenDuels, ["home-open-duels"], {
-  revalidate: 15,
-  tags: ["duels"],
-});

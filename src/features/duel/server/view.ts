@@ -1,4 +1,3 @@
-import { unstable_cache } from "next/cache";
 import { prisma } from "@/shared/lib/db";
 import { serialize } from "@/shared/lib/serialize";
 import { isDemoMint } from "@/shared/lib/solana/mint";
@@ -87,10 +86,8 @@ async function loadDuelPageModel(id: string): Promise<DuelPageModel | null> {
 /**
  * Load + shape a duel for the fight-card page.
  * Returns null when the id does not exist (caller should `notFound()`).
+ * Uncached — matches `force-dynamic` duel page and avoids 404 vs stale home links.
  */
 export function getDuelPageModel(id: string): Promise<DuelPageModel | null> {
-  return unstable_cache(() => loadDuelPageModel(id), ["duel-page", id], {
-    revalidate: 10,
-    tags: ["duels", `duel:${id}`],
-  })();
+  return loadDuelPageModel(id);
 }

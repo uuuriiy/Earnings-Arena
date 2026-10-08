@@ -7,7 +7,7 @@ import { FeaturedBout } from "@/features/home/components/FeaturedBout";
 import { BoutBoard } from "@/features/home/components/BoutBoard";
 import { Button } from "@/shared/ui/button";
 
-/** Live board — runtime fetch (unstable_cache in service); no build-time DB. */
+/** Live board — runtime DB fetch; no build-time Prisma. */
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
