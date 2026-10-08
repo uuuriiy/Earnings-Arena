@@ -13,7 +13,7 @@ Target: **staging** on Vercel with ledger pot, Privy auth, Pump mint verify, and
 
 Do **not** put `prisma migrate deploy` into local `package.json` `build` — CI uses a dummy `DATABASE_URL`.
 
-Sub-daily crons in [`vercel.json`](../vercel.json) need a Vercel plan that supports them (Hobby is limited).
+[`vercel.json`](../vercel.json) uses **daily** cron schedules so Hobby plans can deploy. For every-few-minutes settle/fees (needed for live earnings nights), upgrade to Pro and change schedules back to `*/5` / `*/10`, or hit the cron URLs manually / from an external scheduler.
 
 ## Environment variables
 
@@ -57,12 +57,12 @@ Solana login must be enabled (same as local).
 
 Configured in [`vercel.json`](../vercel.json):
 
-| Path | Schedule | Role |
-|------|----------|------|
-| `/api/cron/settle` | `*/5 * * * *` | Print → settle → resolve |
-| `/api/cron/fees` | `*/10 * * * *` | Credit fees into active pots |
+| Path | Schedule (Hobby) | Role |
+|------|------------------|------|
+| `/api/cron/settle` | `0 12 * * *` (12:00 UTC daily) | Print → settle → resolve |
+| `/api/cron/fees` | `0 13 * * *` (13:00 UTC daily) | Credit fees into active pots |
 
-Both require `Authorization: Bearer $CRON_SECRET`. Manual check:
+Both require `Authorization: Bearer $CRON_SECRET`. Manual check anytime (recommended on Hobby):
 
 ```bash
 curl -sS -H "Authorization: Bearer $CRON_SECRET" "https://<host>/api/cron/settle"
