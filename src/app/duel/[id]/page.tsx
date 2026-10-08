@@ -6,7 +6,8 @@ import { DuelActionRail } from "@/features/duel/components/DuelActionRail";
 import { DuelShareFooter } from "@/features/duel/components/DuelShareFooter";
 import { SettlementKO } from "@/features/duel/components/SettlementKO";
 
-export const revalidate = 10;
+export const dynamic = "force-dynamic";
+
 
 export default async function DuelPage({
   params,

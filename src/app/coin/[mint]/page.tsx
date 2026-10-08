@@ -5,7 +5,8 @@ import { serialize } from "@/shared/lib/serialize";
 import { QuoteTicker } from "@/features/market/components/QuoteTicker";
 import { Card, CardContent } from "@/shared/ui/card";
 
-export const revalidate = 30;
+export const dynamic = "force-dynamic";
+
 
 interface CoinPageProps {
   params: Promise<{ mint: string }>;

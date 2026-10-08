@@ -7,8 +7,9 @@ import { FeaturedBout } from "@/features/home/components/FeaturedBout";
 import { BoutBoard } from "@/features/home/components/BoutBoard";
 import { Button } from "@/shared/ui/button";
 
-/** Live board — short ISR instead of blocking every navigation. */
-export const revalidate = 15;
+/** Live board — runtime fetch (unstable_cache in service); no build-time DB. */
+export const dynamic = "force-dynamic";
+
 
 export default async function HomePage() {
   const duels = await listOpenDuels();
@@ -17,8 +18,8 @@ export default async function HomePage() {
   const board = featured ? duels.filter((d) => d.id !== featured.id) : duels;
 
   return (
-    <div>
-      <section className="relative mb-10 flex min-h-[100dvh] flex-col justify-end border-b border-border pb-10 pt-16">
+    <>
+      <section className="relative mb-10 flex min-h-dvh flex-col justify-end border-b border-border pb-10 pt-16">
         <Image
           src="/brand-mark.png"
           alt=""
@@ -60,7 +61,7 @@ export default async function HomePage() {
             ARENA
           </p>
         </div>
-        <p className="relative mt-3 max-w-[28rem] font-sans text-muted-foreground">
+        <p className="relative mt-3 max-w-md font-sans text-muted-foreground">
           Memecoins pinned to sub-$5 stocks. Bigger absolute move after earnings takes the pot.
         </p>
         <div className="relative mt-5">
@@ -81,6 +82,6 @@ export default async function HomePage() {
       </section>
 
       <BoutBoard board={board} featuredId={featured?.id ?? null} />
-    </div>
+    </>
   );
 }

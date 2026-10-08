@@ -13,6 +13,8 @@ Target: **staging** on Vercel with ledger pot, Privy auth, Pump mint verify, and
 
 Do **not** put `prisma migrate deploy` into local `package.json` `build` — CI uses a dummy `DATABASE_URL`.
 
+DB-backed pages (`/`, `/feed`, `/duel/[id]`, `/coin/[mint]`) use `force-dynamic` so `next build` does not require a reachable Postgres at build time. Runtime still needs `DATABASE_URL`.
+
 [`vercel.json`](../vercel.json) uses **daily** cron schedules so Hobby plans can deploy. For every-few-minutes settle/fees (needed for live earnings nights), upgrade to Pro and change schedules back to `*/5` / `*/10`, or hit the cron URLs manually / from an external scheduler.
 
 ## Environment variables

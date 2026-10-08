@@ -3,19 +3,21 @@ import { listKoFeed } from "@/features/feed/server/service";
 import { KoFeedCard } from "@/features/feed/components/KoFeedCard";
 import { Button } from "@/shared/ui/button";
 
-export const revalidate = 30;
+/** Avoid build-time Prisma (CI/Vercel have no DB during static generation). */
+export const dynamic = "force-dynamic";
+
 
 export default async function FeedPage() {
   const logs = await listKoFeed(30);
 
   return (
     <>
-      <h1 className="mb-2 font-display text-5xl tracking-[0.05em]">KO FEED</h1>
+      <h1 className="mb-2 font-display text-5xl tracking-wider">KO FEED</h1>
       <p className="mb-8 max-w-md text-muted-foreground">
         Settled bouts — winner, absolute moves, pot paid.
       </p>
 
-      {logs.length === 0 ? (
+      {!logs.length ? (
         <div className="border border-dashed border-border p-10 text-center">
           <p className="font-display text-3xl tracking-[0.06em] text-muted-foreground">
             NO KOs YET
